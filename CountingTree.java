@@ -17,10 +17,16 @@ class CountingTree_UpdateInterval_QueryCell {
    * @param value The value to add to all cells in the interval*/
   void update(int lo, int up, int value) {
     for(lo += offset-1, up += offset+1; lo/2 != up/2; lo /= 2, up /= 2) {
-      if(lo%2 == 0)
-        tree[lo^1] += value;
-      if(up%2 == 1)
+      if(lo%2 == 0){
+          tree[lo^1] += value;  // sum
+      //  tree[lo^1] = value; // max
+      }
+        
+      if(up%2 == 1){
         tree[up^1] += value;
+      //tree[up^1] = value;  // max
+      }
+        
     }
   }
   
@@ -30,8 +36,10 @@ class CountingTree_UpdateInterval_QueryCell {
    * @return The value of the cell*/
   int query(int cell) {
     int result = 0;
-    for(cell += offset; cell > 0; cell /= 2)
-      result += tree[cell];
+    for(cell += offset; cell > 0; cell /= 2){
+    	result += tree[cell];	// sum
+	//	result = Math.max(result, tree[cell]);	// max
+    }      
     
     return result;
   }
