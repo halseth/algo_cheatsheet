@@ -58,4 +58,28 @@ class ValueSearch {
     }
     return (lo+hi)/2;
   }
+  
+	/**
+	 * Discrete ternary search. Returns index (integer) of best element
+	 */
+	static int discrete_ternary_search(int a, int b) {
+	    while (a < b-2) {
+	        int l = a + (b - a)/3;
+	        int r = b - (b - a)/3;
+	        if (f(l) > f(r)) // < for finding max in interval
+	        	a = l;
+	        else 
+	        	b = r;
+	    }
+	    int best = f(a);
+	    int besti = a;
+	    for(int i = a+1; i <= b; i++){
+	    	int v = f(i);
+	    	if(best > v){ // < for finding max in interval
+	    		best = v;
+	    		besti = i;
+	    	}
+	    }
+	    return besti;
+	}
 }

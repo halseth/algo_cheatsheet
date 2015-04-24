@@ -13,3 +13,4 @@ hs_err_pid*
 
 # Latex #
 *.pdf
+*.texpadtmp/
