@@ -1,0 +1,121 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[cm]{fullpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\title{Algorithms cheat sheet}
+\author{Magnar Myrtveit}
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\def\path{..}
+\makeatother
+
+\hypersetup
+	{ pdfauthor=\theauthor
+	, pdftitle=\thetitle
+	, pdfsubject={Algorithms reference}
+	}
+
+\lstset{
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=true,
+	breaklines=true,
+	commentstyle=\color[rgb]{0.25,0.5,0.35},
+	frame=single,
+	keywordstyle=\color[rgb]{0.5,0,0.35}\bfseries,
+	language=Java,
+	morecomment=[s][{\color[rgb]{0.25,0.35,0.75}}]{/**}{*/},
+	numbers=left,
+	rulecolor=\color{black},
+	stringstyle=\color[rgb]{0.6,0,0}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\clearpage
+\section{Graph theory}
+\subsection{Bipartite matching}
+\lstinputlisting[firstline=3]{\path/BipartiteMatching.java}
+
+\clearpage
+\subsection{DFS}
+\lstinputlisting[firstline=3]{\path/DFS.java}
+
+\clearpage
+\subsection{Maximum flow / minimum cut}
+\lstinputlisting[firstline=3]{\path/MaxFlow.java}
+
+\clearpage
+\subsection{Minimum spanning tree}
+\lstinputlisting[firstline=3]{\path/MST.java}
+
+\clearpage
+\subsection{Strongly connected components}
+\lstinputlisting[firstline=3]{\path/SCC.java}
+
+\clearpage
+\subsection{Shortest path (BFS, Dijkstra, Bellman-Ford, Floyd-Warshall)}
+\lstinputlisting[firstline=3]{\path/ShortestPath.java}
+
+\clearpage
+\section{Number theory (primes, factorize, binomial coeff, catalan, GCD\dots)}
+\lstinputlisting[firstline=3]{\path/NumberTheory.java}
+
+\clearpage
+\section{Set theory (combinations, permutations)}
+\lstinputlisting[firstline=3]{\path/SetTheory.java}
+
+\clearpage
+\section{Data structures}
+\subsection{Counting tree}
+\lstinputlisting[firstline=1]{\path/CountingTree.java}
+
+\clearpage
+\subsection{Union find}
+\lstinputlisting[firstline=3]{\path/UnionFind.java}
+
+\clearpage
+\section{Searching}
+\subsection{Pattern search (KMP)}
+\lstinputlisting[firstline=3]{\path/PatternSearch.java}
+
+\clearpage
+\subsection{Value search (binary search, ternary search)}
+\lstinputlisting[firstline=1]{\path/ValueSearch.java}
+
+\clearpage
+\section{Geomptry}
+\subsection{Convex hull}
+\lstinputlisting[firstline=3]{\path/ConvexHull.java}
+
+\clearpage
+\subsection{Geometry 2D}
+\lstinputlisting[firstline=3]{\path/Geometry2D.java}
+
+\clearpage
+\subsection{Geometry 3D}
+\lstinputlisting[firstline=1]{\path/Geometry3D.java}
+
+\clearpage
+\section{Miscellaneous}
+\subsection{2-SAT}
+\lstinputlisting[firstline=3]{\path/TwoSat.java}
+
+\clearpage
+\subsection{Bit operations}
+\lstinputlisting[firstline=1]{\path/BitOperations.java}
+
+\subsection{Input}
+\lstinputlisting[firstline=1]{\path/Input.java}
+
+\clearpage
+\subsection{Tuple}
+\lstinputlisting[firstline=3]{\path/Tuple.java}
+
+
+\end{document}
