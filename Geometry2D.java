@@ -2,6 +2,7 @@ import java.util.*;
 
 class Point {
   double x, y;
+  
   /**Create a point at the specified coordinates
    * @param x The x coordinate
    * @param y The y coordinate*/
@@ -74,7 +75,7 @@ class Point {
    * @param p3 A point
    * @return The area of the triangle defined by the 3 points*/
   static double area(Point p1, Point p2, Point p3) {
-    return Math.abs(Vector.cross(new Vector(p1, p2), new Vector(p1, p3)))/2;
+    return Math.abs(new Vector(p1, p2).cross(new Vector(p1, p3)))/2;
   }
   
   /**A Point Comparator comparing first on x coordinate, and then on y coordinate if the x coordinates are equal*/
@@ -91,6 +92,7 @@ class Point {
 class Vector {
   static double precision = 0.0000001;
   double x, y;
+  
   /**Create a vector going from origo to the specified coordinates
    * @param x The x coordinate
    * @param y The y coordinate*/
@@ -184,34 +186,14 @@ class Vector {
   public String toString() {
     return "<"+x+", "+y+">";
   }
-  
-  /**@param v1 A vector
-   * @param v2 A vector
-   * @return The dot product of the vectors*/
-  static double dot(Vector v1, Vector v2) {
-    return v1.dot(v2);
-  }
-  
-  /**@param v1 A vector
-   * @param v2 A vector
-   * @return The cross product of the vectors*/
-  static double cross(Vector v1, Vector v2) {
-    return v1.cross(v2);
-  }
-  
-  /**@param v1 A vector
-   * @param v2 A vector
-   * @return Whether the vectors are parallel*/
-  static boolean isParallel(Vector v1, Vector v2) {
-    return v1.isParallel(v2);
-  }
 }
 
 /**Class representing a line segment*/
 class Segment {
   static double precision = 0.0000001;
-  Point s;
-  Point e;
+  Point s, e;
+  Vector v;
+  
   /**Create a line segment going through the specified coordinates
    * @param sx The first x coordinate
    * @param sy The first y coordinate
@@ -220,6 +202,7 @@ class Segment {
   Segment(double sx, double sy, double ex, double ey) {
     this.s = new Point(sx, sy);
     this.e = new Point(ex, ey);
+    this.v = new Vector(s, e);
   }
   /**Create a line segment going through the specified points
    * @param s The first point
@@ -227,6 +210,7 @@ class Segment {
   Segment(Point s, Point e) {
     this.s = new Point(s);
     this.e = new Point(e);
+    this.v = new Vector(s, e);
   }
   
   /**@return The length of this line segment*/
@@ -269,10 +253,11 @@ class Segment {
    * @return Whether this line segment intersects l*/
   boolean intersects(Segment l) {
     // l intersects with the unbounded line coinciding with this line segment
-    if(Vector.cross(new Vector(s, e), new Vector(s, l.s)) * Vector.cross(new Vector(s, e), new Vector(s, l.e)) > precision)
+    if(v.cross(new Vector(s, l.s)) * v.cross(new Vector(s, l.e)) > precision)
       return false;
+    Vector lv = new Vector(l.s, l.e);
     // this line segment intersects with the unbounded line coinciding with l
-    if(Vector.cross(new Vector(l.s, l.e), new Vector(l.s, s)) * Vector.cross(new Vector(l.s, l.e), new Vector(l.s, e)) > precision)
+    if(lv.cross(new Vector(l.s, s)) * lv.cross(new Vector(l.s, e)) > precision)
       return false;
     return true;
   }
@@ -293,23 +278,23 @@ class Segment {
   /**@param l Another line segment
    * @return Whether this line segment is parallel to l*/
   boolean isParallel(Segment l) {
-    return Vector.isParallel(new Vector(s, e), new Vector(l.s, l.e));
+    return v.isParallel(l.v);
   }
   
   /**@param p A point
    * @return Whether there is a perpendicular line going from this line segment through p*/
   boolean hasPerpendicular(Point p) {
-    return Vector.dot(new Vector(s, p), new Vector(s, e)) >= 0 && Vector.dot(new Vector(e, p), new Vector(e, s)) >= 0;
+    return v.dot(new Vector(s, p)) >= 0 && new Vector(e, s).dot(new Vector(e, p)) >= 0;
   }
   
   /**@return A line segment perpendicular to this line segment going through the starting point of this line segment*/
   Segment perpendicularStart() {
-    return new Segment(s, s.move(new Vector(s, e).normal()));
+    return new Segment(s, s.move(v.normal()));
   }
   
   /**@return A line segment perpendicular to this line segment going through the ending point of this line segment*/
   Segment perpendicularEnd() {
-    return new Segment(e, e.move(new Vector(s, e).normal()));
+    return new Segment(e, e.move(v.normal()));
   }
   
   /**@param l Another line segment
@@ -328,8 +313,9 @@ class Segment {
 /**Class representing an unbounded line*/
 class Line {
   static double precision = 0.0000001;
-  Point s;
-  Point e;
+  Point s, e;
+  Vector v;
+  
   /**Create an unbounded line going through the specified coordinates
    * @param sx The first x coordinate
    * @param sy The first y coordinate
@@ -338,6 +324,7 @@ class Line {
   Line(double sx, double sy, double ex, double ey) {
     this.s = new Point(sx, sy);
     this.e = new Point(ex, ey);
+    this.v = new Vector(s, e);
   }
   /**Create an unbounded line going through the specified points
    * @param s The first point
@@ -345,6 +332,7 @@ class Line {
   Line(Point s, Point e) {
     this.s = new Point(s);
     this.e = new Point(e);
+    this.v = new Vector(s, e);
   }
   
   /**@param p A point
@@ -356,7 +344,6 @@ class Line {
   /**@param p A point
    * @return The point on this unbounded line closest to p*/
   Point closest(Point p) {
-    Vector v = new Vector(s, e);
     return s.move(v.mult(v.dot(new Vector(s, p))/v.dot(v)));
   }
   
@@ -364,20 +351,17 @@ class Line {
    * @param p A point to be populated with the intersection if exactly one exists
    * @return 1 if there is one solution, 0 if the lines coincide (inf solutions), -1 if the lines are distinct and parallel (no solutions)*/
   int intersection(Line l, Point p) {
-    Vector v1 = new Vector(s, e);
-    double c = v1.cross(new Vector(l.s, l.e));
-    double d = v1.cross(new Vector(l.s, s));
+    double c = v.cross(l.v);
+    double d = v.cross(new Vector(l.s, s));
     if(Math.abs(c) < precision) {
       if(Math.abs(d) < precision)
         return 0;
       return -1;
     }
-    Vector v2 = new Vector(l.e, l.s);
-    Vector v3 = new Vector(e, s);
-    double a = Vector.cross(new Vector(s), new Vector(e));
-    double b = Vector.cross(new Vector(l.s), new Vector(l.e));
-    p.x = (a*v2.x - b*v3.x)/c;
-    p.y = (a*v2.y - b*v3.y)/c;
+    double a = new Vector(s).cross(new Vector(e));
+    double b = new Vector(l.s).cross(new Vector(l.e));
+    p.x = (b*v.x - a*l.v.x)/c;
+    p.y = (b*v.y - a*l.v.y)/c;
     
     return 1;
   }
@@ -385,13 +369,13 @@ class Line {
   /**@param l Another unbounded line
    * @return Whether this unbounded line is parallel to l*/
   boolean isParallel(Line l) {
-    return Vector.isParallel(new Vector(s, e), new Vector(l.s, l.e));
+    return v.isParallel(l.v);
   }
   
   /**@param p A point
    * @return -1 if p is to the left of this line, 1 if p is to the right of this line, 0 if p is on this line*/
   int sideOf(Point p) {
-    double a = Vector.cross(new Vector(s, e), new Vector(s, p));
+    double a = v.cross(new Vector(s, p));
     if(a > 0)
       return -1;
     if(a < 0)

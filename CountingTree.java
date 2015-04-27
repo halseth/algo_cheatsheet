@@ -1,46 +1,46 @@
+import java.util.*;
+
 class CountingTree_UpdateInterval_QueryCell {
   private final int offset;
   private final int[] tree;
   
-  /**A data structure for adding values to intervals of cells, and retrieving values from single cells
+  /**Data structure for adding values to intervals of cells, and retrieving values from single cells
    * O(n)
    * @param n The number of cells*/
   CountingTree_UpdateInterval_QueryCell(int n) {
-    this.offset = n;
-    tree = new int[2*n];
+    offset = n;
+    tree = new int[2*offset];
   }
   
-  /**Add value to all cells in interval [lo, up]
+  /**Add value to all cells in interval [l,r]
    * O(log n)
-   * @param lo The first cell in the interval
-   * @param hi The last cell in the interval
-   * @param value The value to add to all cells in the interval*/
-  void update(int lo, int up, int value) {
-    for(lo += offset-1, up += offset+1; lo/2 != up/2; lo /= 2, up /= 2) {
-      if(lo%2 == 0){
-          tree[lo^1] += value;  // sum
-      //  tree[lo^1] = value; // max
+   * @param l The first cell in the interval
+   * @param r The last cell in the interval
+   * @param v The value to add to all cells in the interval*/
+  void update(int l, int r, int v) {
+    for(l += offset-1, r += offset+1; l/2 != r/2; l /= 2, r /= 2) {
+      if(l%2 == 0) {
+          tree[l^1] += v; // sum
+//        tree[l^1] = v;  // min/max
       }
-        
-      if(up%2 == 1){
-        tree[up^1] += value;
-      //tree[up^1] = value;  // max
+      if(r%2 == 1) {
+        tree[r^1] += v; // sum
+//      tree[r^1] = v;  // min/max
       }
-        
     }
   }
   
   /**Get the value in a cell
    * O(log n)
-   * @param cell The cell
+   * @param i The cell
    * @return The value of the cell*/
-  int query(int cell) {
+  int query(int i) {
     int result = 0;
-    for(cell += offset; cell > 0; cell /= 2){
-    	result += tree[cell];	// sum
-	//	result = Math.max(result, tree[cell]);	// max
-    }      
-    
+    for(i += offset; i > 0; i /= 2){
+    	result += tree[i];                  // sum
+//		result = Math.min(result, tree[i]); // min
+//		result = Math.max(result, tree[i]); // max
+    }
     return result;
   }
 }
@@ -49,56 +49,53 @@ class CountingTree_UpdateCell_QueryInterval {
   private final int offset;
   private final int[] tree;
   
-  /**A data structure for updating values of single cells, and retrieving the sum/min/max/gcd over intervals of cells
+  /**Data structure for updating values of single cells, and retrieving the sum/min/max/gcd over intervals of cells
    * O(n)
    * @param n The number of cells*/
   CountingTree_UpdateCell_QueryInterval(int n) {
-    this.offset = n;
-    tree = new int[2*n];
+    offset = n;
+    tree = new int[2*offset];
   }
   
   /**Update the value of a cell
    * O(log n)
-   * @param cell The cell to update
-   * @param value The value to update with*/
-  void update(int cell, int value) {
-    cell += offset;
-    tree[cell] += value; // sum
-//  tree[cell] = value;  // min
-//  tree[cell] = value;  // max
-//  tree[cell] = value;  // gcd
+   * @param i The cell to update
+   * @param v The value to put in the cell*/
+  void update(int i, int v) {
+    i += offset;
+    tree[i] += v; // sum
+//  tree[i] = v;  // min/max/gcd
     
-    for(cell /= 2; cell > 0; cell /= 2) {
-      tree[cell] = tree[2*cell]+tree[2*cell+1];            // sum
-//    tree[cell] = Math.min(tree[2*cell], tree[2*cell+1]); // min
-//    tree[cell] = Math.max(tree[2*cell], tree[2*cell+1]); // max
-//    tree[cell] = gcd(tree[2*cell], tree[2*cell+1]);      // gcd
+    for(i /= 2; i > 0; i /= 2) {
+      tree[i] = tree[2*i]+tree[2*i+1];                    // sum
+//    tree[i] = Math.min(tree[2*i], tree[2*i+1]);         // min
+//    tree[i] = Math.max(tree[2*i], tree[2*i+1]);         // max
+//    tree[i] = NumberTheory.gcd(tree[2*i], tree[2*i+1]); // gcd
     }
   }
   
-  /**Get the sum/min/max/gcd over all cells in interval [lo, hi]
+  /**Get the sum/min/max/gcd over all cells in interval [l,r]
    * O(log n)
-   * @param lo The first cell in the interval
-   * @param hi The last cell in the interval
+   * @param l The first cell in the interval
+   * @param r The last cell in the interval
    * @return The sum/min/max/gcd over the interval*/
-  int query(int lo, int up) {
-    int result = 0;                 // sum
+  int query(int l, int r) {
+    int result = 0;                 // sum/gcd
 //  int result = Integer.MAX_VALUE; // min
-//  int result = 0;                 // max
-//  int result = 0;                 // gcd
+//  int result = Integer.MIN_VALUE; // max
     
-    for(lo += offset-1, up += offset+1; lo/2 != up/2; lo /= 2, up /= 2) {
-      if(lo%2 == 0) {
-        result += tree[lo^1];                   // sum
-//      result += Math.min(result, tree[lo^1]); // min
-//      result += Math.max(result, tree[lo^1]); // max
-//      result += gcd(result, tree[lo^1]);      // gcd
+    for(l += offset-1, r += offset+1; l/2 != r/2; l /= 2, r /= 2) {
+      if(l%2 == 0) {
+        result += tree[l^1];                          // sum
+//      result = Math.min(result, tree[l^1]);         // min
+//      result = Math.max(result, tree[l^1]);         // max
+//      result = NumberTheory.gcd(result, tree[l^1]); // gcd
       }
-      if(up%2 == 1) {
-        result += tree[up^1];                   // sum
-//      result += Math.min(result, tree[up^1]); // min
-//      result += Math.max(result, tree[up^1]); // max
-//      result += gcd(result, tree[up^1]);      // gcd
+      if(r%2 == 1) {
+        result += tree[r^1];                          // sum
+//      result = Math.min(result, tree[r^1]);         // min
+//      result = Math.max(result, tree[r^1]);         // max
+//      result = NumberTheory.gcd(result, tree[r^1]); // gcd
       }
     }
     
@@ -106,97 +103,103 @@ class CountingTree_UpdateCell_QueryInterval {
   }
 }
 
-static class CountingTree_UpdateInterval_QueryInterval {
+class CountingTree_UpdateInterval_QueryInterval {
+  private final int offset;
+  private final long[] tree;
+  private final long[] bonus;
 
-  private int OFFSET = 300000; // This may have to be increased for big input
-  private long bonus[];
-  private long tree[];
+  /**Data structure for adding values to intervals of cells, and retrieving the sum/min/max over intervals of cells
+   * O(n)
+   * @param n The number of cells*/
+  CountingTree_UpdateInterval_QueryInterval(int n){
+    offset = n+1;
+    bonus = new long[2*offset];
+    tree = new long[2*offset];
+  }
 
-  /**
-   * Returns: sum/max in interval [l,r]. O(logn)
-   */
-  public long getSum(int l, int r){
-    l+=OFFSET-1; r+=OFFSET+1; 
-    ArrayList<Integer> left = new ArrayList<Integer>(); 
-    ArrayList<Integer> right = new ArrayList<Integer>();
-    while ((l>>1)!=(r>>1)) {
-      left.add(l); right.add(r);
-      l>>=1; r>>=1;
-    }
-    int root=(l>>1);
-    long bs=0;
-    while (l>>1 != 0) {
-      bs+=bonus[l>>1];                //sum
-//    bs = Math.max(bs,bonus[l>>1]);  //max
-      l>>=1;
-    }
-    long lbonus=bs+bonus[root<<1];              //sum
-//  long lbonus = Math.max(bs,bonus[root<<1]);  //max
-    long rbonus=bs+bonus[(root<<1)+1];              //sum
-//  long rbonus = Math.max(bs,bonus[(root<<1)+1]);  //max
-    long result=0;
-    for(int i = left.size()-1; i >= 0; i--){                    
-      if (!(left.get(i)%2 == 1)){
-        result+=((lbonus+bonus[left.get(i)^1])<<i)+tree[left.get(i)^1]; //sum
-//      result = Math.max(result,Math.max(tree[left.get(i)^1],lbonus)); //max
-      }                 
-      if ( (right.get(i)%2 ==1)){
-        result+=((rbonus+bonus[right.get(i)^1])<<i)+tree[right.get(i)^1]; //sum
-//      result = Math.max(result,Math.max(tree[right.get(i)^1],rbonus));  //max
+  /**Add value to all cells in interval [l,r]
+   * O(log n)
+   * @param l The first cell in the interval
+   * @param r The last cell in the interval
+   * @param v The value to add to all cells in the interval*/
+  void update(int l, int r, long v) {
+    int chunk = 0;               // sum
+    long lcount = 0, rcount = 0; // sum
+    for(l += offset-1, r += offset+1; l>>1 != r>>1; l >>= 1, r >>= 1) {
+      if(l%2 == 0) {
+        bonus[l^1] += v;    // sum
+        lcount += v<<chunk; // sum
+//      tree[l^1] = v;      // min/max
+//      bonus[l^1] = v;     // min/max
       }
-      lbonus+=bonus[left.get(i)];                   //sum
-//    lbonus = Math.max(lbonus,bonus[left.get(i)]); //max
-      rbonus+=bonus[right.get(i)];                    //sum
-//    rbonus = Math.max(rbonus,bonus[right.get(i)]);  //max
+      if(r%2 == 1) {
+        bonus[r^1] += v;    // sum
+        rcount += v<<chunk; // sum
+//      tree[r^1] = v;      // min/max
+//      bonus[r^1] = v;     // min/max
+      }
+      ++chunk; // sum
+      
+      tree[l>>1] += lcount;                                             // sum
+      tree[r>>1] += rcount;                                             // sum
+//    tree[l>>1] = Math.min(bonus[l>>1], Math.min(tree[l], tree[l^1])); // min
+//    tree[r>>1] = Math.min(bonus[r>>1], Math.min(tree[r], tree[r^1])); // min
+//    tree[l>>1] = Math.max(bonus[l>>1], Math.max(tree[l], tree[l^1])); // max
+//    tree[r>>1] = Math.max(bonus[r>>1], Math.max(tree[r], tree[r^1])); // max
+    }
+    
+    for(; l>>1 > 0; l >>= 1) {
+      tree[l>>1] += lcount+rcount;                                      // sum
+//    tree[l>>1] = Math.min(bonus[l>>1], Math.min(tree[l], tree[l^1])); // min
+//    tree[l>>1] = Math.max(bonus[l>>1], Math.max(tree[l], tree[l^1])); // max
+    }
+  }
+
+  /**Get the sum/min/max over all cells in interval [l,r]
+   * O(log n)
+   * @param l The first cell in the interval
+   * @param r The last cell in the interval
+   * @return The sum/min/max over the interval*/
+  long query(int l, int r) {
+    ArrayList<Integer> left = new ArrayList(); 
+    ArrayList<Integer> right = new ArrayList();
+    for(l += offset-1, r += offset+1; l>>1 != r>>1; l >>= 1, r >>= 1) {
+      left.add(l);
+      right.add(r);
+    }
+    long bs = 0;
+    for(l >>= 1; l > 0; l >>= 1) {
+      bs += bonus[l];              // sum
+//    bs = Math.min(bs, bonus[l]); // min
+//    bs = Math.max(bs, bonus[l]); // max
+    }
+    long lbonus = bs+bonus[r^1];            // sum
+    long rbonus = bs+bonus[r|1];            // sum
+//  long lbonus = Math.min(bs, bonus[r^1]); // min
+//  long rbonus = Math.min(bs, bonus[r|1]); // min
+//  long lbonus = Math.max(bs, bonus[r^1]); // max
+//  long rbonus = Math.max(bs, bonus[r|1]); // max
+    
+    long result = 0;
+    for(int i = left.size()-1; i >= 0; --i) {
+      if(left.get(i)%2 == 0) {
+        result += ((lbonus+bonus[left.get(i)^1])<<i)+tree[left.get(i)^1]; // sum
+//      result = Math.min(result, Math.min(tree[left.get(i)^1], lbonus)); // min
+//      result = Math.max(result, Math.max(tree[left.get(i)^1], lbonus)); // max
+      }
+      if(right.get(i)%2 == 1) {
+        result += ((rbonus+bonus[right.get(i)^1])<<i)+tree[right.get(i)^1]; // sum
+//      result = Math.min(result, Math.min(tree[right.get(i)^1], rbonus));  // min
+//      result = Math.max(result, Math.max(tree[right.get(i)^1], rbonus));  // max
+      }
+      
+      lbonus += bonus[left.get(i)];                   // sum
+      rbonus += bonus[right.get(i)];                  // sum
+//    lbonus = Math.min(lbonus, bonus[left.get(i)]);  // min
+//    rbonus = Math.min(rbonus, bonus[right.get(i)]); // min
+//    lbonus = Math.max(lbonus, bonus[left.get(i)]);  // max
+//    rbonus = Math.max(rbonus, bonus[right.get(i)]); // max
     }
     return result;
-  }
-
-  /**
-   * Adds v to all cells in interval [l,r]. O(logn)
-   */
-  public void add(int l, int r, long v){
-    l+=OFFSET-1; r+=OFFSET+1;
-    long chunk=0,lcount=0,rcount=0;
-    while ((l>>1)!=(r>>1)){
-      if (!(l%2 == 1)) 
-        { bonus[l^1]+=v; lcount+=v<<chunk; }  //sum
-//      {tree[l^1]=v; bonus[l^1]=v;}          //max
-      
-      if ( (r%2 == 1)) 
-        { bonus[r^1]+=v; rcount+=v<<chunk; }  //sum
-//      { tree[r^1]=v; bonus[r^1]=v;}         //max
-      
-      tree[l>>1]+=lcount;                                               //sum
-//    tree[l>>1] = Math.max(bonus[l>>1], Math.max(tree[l],tree[l^1]));  //max
-      
-      tree[r>>1]+=rcount;                                               //sum
-//    tree[r>>1] = Math.max(bonus[r>>1], Math.max(tree[r],tree[r^1]));  //max
-      
-      l>>=1; r>>=1; chunk++;
-    }
-    lcount+=rcount;
-    while ((l >> 1 != 0)) {
-      tree[l>>1]+=lcount;                                               //sum
-//    tree[l>>1] = Math.max(bonus[l>>1], Math.max(tree[l],tree[l^1]));  //max
-      l>>=1;
-    }
-  }
-
-  /**
-   * Constructor using specified OFFSET
-   */
-  public CountingTree_UpdateInterval_QueryInterval(){
-    bonus = new long[OFFSET*2];
-    tree = new long[OFFSET*2];
-  }
-
-  /**
-   * Constructor using n - the size of the array.
-   */
-  public CountingTree_UpdateInterval_QueryInterval(int n){
-    OFFSET = n+1;
-    bonus = new long[OFFSET*2];
-    tree = new long[OFFSET*2];
   }
 }

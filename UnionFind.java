@@ -3,7 +3,7 @@ import java.util.*;
 class UnionFind {
   int[] elms;
   
-  /**A data structure for working with grouping of elements
+  /**Data structure for working with grouping of elements
    * o(n)
    * @param n The number of elements*/
   UnionFind(int n) {
