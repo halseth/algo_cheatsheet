@@ -44,11 +44,8 @@ class NumberTheory {
   static ArrayList<Pair> factorize(int n) {
     ArrayList<Pair> factors = new ArrayList();
     for(int p : primes) {
-      if(p*p > n) {
-        if(n > 1)
-          factors.add(new Pair(n, 1));
+      if(p*p > n)
         break;
-      }
       int count = 0;
       while(n%p == 0) {
         count++;
@@ -57,6 +54,8 @@ class NumberTheory {
       if(count > 0)
         factors.add(new Pair(p, count));
     }
+    if(n > 1)
+      factors.add(new Pair(n, 1));
     return factors;
   }
   
