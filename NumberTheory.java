@@ -13,7 +13,7 @@ class NumberTheory {
     for(int p = 2; p <= n; ++p)
       if(!visited[p]) {
         primes.add(p);
-        for(int m = p*p; m <= n; m += p)
+        for(int m = p*p; m <= n && m > p; m += p)
           visited[m] = true;
       }
     return primes;
