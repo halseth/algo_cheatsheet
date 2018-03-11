@@ -12,8 +12,13 @@
 hs_err_pid*
 
 # Latex #
-*.pdf
-*.texpadtmp/
+/LaTeX/*.texpadtmp/
+/LaTeX/*.aux
+/LaTeX/*.log
+/LaTeX/*.out
+/LaTeX/*.pdf
+/LaTeX/*.synctex.gz
+/LaTeX/*.toc
 
 # Mac #
 *.DS_Store
