@@ -10,7 +10,7 @@ class NumberTheory {
    * @return All prime numbers less than or equal to n*/
   static ArrayList<Integer> primes(int n) {
     boolean[] visited = new boolean[n+1];
-    for(int p = 2; p <= n; ++p)
+    for(int p = 2; p <= Math.sqrt(n); ++p)
       if(!visited[p]) {
         primes.add(p);
         for(int m = p*p; m <= n && m > p; m += p)
@@ -31,7 +31,7 @@ class NumberTheory {
     primes[1] = false;
     for(int p = 2; p <= Math.sqrt(n); ++p)
       if(primes[p]) {
-        for(int m = p*p; m <= n; m += p)
+        for(int m = p*p; m <= n && m > p; m += p)
           primes[m] = false;
       }
     return primes;
