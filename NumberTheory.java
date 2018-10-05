@@ -31,7 +31,7 @@ class NumberTheory {
     primes[1] = false;
     for(int p = 2; p <= Math.sqrt(n); ++p)
       if(primes[p]) {
-        for(int m = p*p; m <= n && m > p; m += p)
+        for(int m = p*p; m <= n; m += p)
           primes[m] = false;
       }
     return primes;
