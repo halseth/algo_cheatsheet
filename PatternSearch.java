@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class PatternSearch {
-   /**Find the occurences of a pattern in a string. Knuth-Morris-Pratt algorithm
+   /**Find the occurrences of a pattern in a string. Knuth-Morris-Pratt algorithm
     * O(n+k). n = length of string, k = length of pattern
     * @param string The string to search in
     * @param pattern The pattern to search for

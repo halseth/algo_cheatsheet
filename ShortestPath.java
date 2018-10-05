@@ -118,7 +118,7 @@ class APSP {
    * Requires Pair
    * O(n^3)
    * Properties:
-   *   1: dist[u][v] gives the lenght of the shortest path from vertex u to vertex v
+   *   1: dist[u][v] gives the length of the shortest path from vertex u to vertex v
    *   2: parent[u][v] gives the last vertex on the shortest path from vertex u to vertex v
    *   3: If vertex v is not reachable from vertex u, dist[u][v] == Integer.MAX_VALUE/2 - 1 and parent[u][v] == -1
    * @param graph Graph represented by adjacency list

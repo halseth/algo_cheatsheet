@@ -108,10 +108,10 @@ class NumberTheory {
     return res;
   }
   
-  /**Generate the n first catalan numbers
+  /**Generate the n first Catalan numbers
    * O(n^2)
    * @param n How many numbers to generate
-   * @return An array where index [i] is the i-th catalan number*/
+   * @return An array where index [i] is the i-th Catalan number*/
   static int[] catalanNumbers(int n) {
     int[] catalan = new int[n+1];
     catalan[0] = 1;
@@ -121,11 +121,11 @@ class NumberTheory {
     return catalan;
   }
   
-  /**Find the greates common divisor of a and b. Euclid's division algorithm
+  /**Find the greatest common divisor of a and b. Euclid's division algorithm
    * O(log min(|a|, |b|))
    * @param a The first number
    * @param b The second number
-   * @return The greates common divisor*/
+   * @return The greatest common divisor*/
   static int gcd(int a, int b) {
     while(b != 0) {
       int t = b;

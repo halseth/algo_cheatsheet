@@ -1,7 +1,7 @@
 import java.util.*;
 
 class TwoSat {
-  /**Checks if a 2-CNF (AND of ORs) forumula is satisfiable
+  /**Checks if a 2-CNF (AND of ORs) formula is satisfiable
    * Requires: SCC
    * O(m+n)
    * To get a valid assignment:
@@ -9,7 +9,7 @@ class TwoSat {
    *   2: Assign TRUE to all vertices reachable from V
    *   3: Assign FALSE to their negations
    *   4: Repeat until all vertices are assigned
-   * @param formula The 2-CNF forumla
+   * @param formula The 2-CNF formula
    * @param n The number of variables
    * @return Whether the formula is satisfiable*/
   static boolean twoSat(Collection<Clause> formula, int n) {
